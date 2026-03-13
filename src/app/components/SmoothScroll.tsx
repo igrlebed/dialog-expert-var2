@@ -115,7 +115,8 @@ export function SmoothScrollProvider({
       // Don't intercept scroll when body overflow is hidden (e.g. modal open)
       if (document.body.style.overflow === 'hidden') return;
 
-      e.preventDefault();
+      // Use active: false or preventDefault with check to avoid Chrome intervention
+      if (e.cancelable) e.preventDefault();
 
       // If animating to a target, cancel it
       isAnimatingToRef.current = false;

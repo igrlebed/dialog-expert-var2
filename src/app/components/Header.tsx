@@ -33,6 +33,7 @@ export const Header = () => {
             ? 'bg-[#050a09]/70 backdrop-blur-2xl border-white/[0.04]'
             : 'bg-transparent border-transparent'
         }`}
+        style={{ height: 'var(--header-height, 72px)' }}
       >
         <div className="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-16 md:h-[72px]">
           {/* Logo */}

@@ -95,12 +95,23 @@ export const Constellation = () => {
       }
     };
 
-    const draw = () => {
+    let lastTime = performance.now();
+    const frameInterval = window.innerWidth < 768 ? 50 : 16; // 20fps for mobile, 60fps for desktop
+
+    const draw = (now: number) => {
       if (!isVisible) {
         animationId = requestAnimationFrame(draw);
         return;
       }
-      const dt = 0.016;
+
+      const elapsed = now - lastTime;
+      if (elapsed < frameInterval) {
+        animationId = requestAnimationFrame(draw);
+        return;
+      }
+
+      lastTime = now - (elapsed % frameInterval);
+      const dt = elapsed / 1000;
       time += dt;
       ctx.clearRect(0, 0, w, h);
 
@@ -241,12 +252,18 @@ export const Constellation = () => {
 
     resize();
     // Defer first draw to not compete with first paint / LCP
-    animationId = requestAnimationFrame(() => {
+    animationId = requestAnimationFrame((now) => {
+      lastTime = now;
       animationId = requestAnimationFrame(draw);
     });
     window.addEventListener('resize', debouncedResize);
 
-    // Pause canvas when not visible
+    // Pause canvas when not visible or tab inactive
+    const handleVisibilityChange = () => {
+      isVisible = !document.hidden;
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     const observer = new IntersectionObserver(
       ([entry]) => { isVisible = entry.isIntersecting; },
       { threshold: 0 }
@@ -257,6 +274,7 @@ export const Constellation = () => {
       cancelAnimationFrame(animationId);
       clearTimeout(resizeTimer);
       window.removeEventListener('resize', debouncedResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       observer.disconnect();
     };
   }, []);
