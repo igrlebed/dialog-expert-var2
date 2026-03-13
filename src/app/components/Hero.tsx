@@ -74,7 +74,7 @@ export const Hero = ({ ready = true }: { ready?: boolean }) => {
   );
 
   return (
-    <section className="relative min-h-screen bg-[#050a09] overflow-hidden">
+    <section className="relative min-h-[calc(100vh-72px)] bg-[#050a09] overflow-hidden">
       <Constellation />
 
       {/* Aurora gradient blobs */}
@@ -95,6 +95,7 @@ export const Hero = ({ ready = true }: { ready?: boolean }) => {
               background:
                 "radial-gradient(ellipse at center, rgba(0,168,79,0.15) 0%, rgba(0,168,79,0.05) 40%, transparent 70%)",
               filter: "blur(60px)",
+              willChange: "transform, opacity",
             }}
           />
         </FloatingElement>
@@ -111,13 +112,14 @@ export const Hero = ({ ready = true }: { ready?: boolean }) => {
               background:
                 "radial-gradient(ellipse at center, rgba(0,100,60,0.12) 0%, transparent 70%)",
               filter: "blur(80px)",
+              willChange: "transform",
             }}
           />
         </FloatingElement>
       </div>
 
-      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 pt-24 md:pt-28 lg:pt-32 pb-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100vh-8rem)]">
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 pt-12 md:pt-16 lg:pt-20 pb-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100vh-14rem)]">
           {/* ── Left: Text ── */}
           <motion.div
             className="flex flex-col items-center text-center lg:items-start lg:text-left"
@@ -295,7 +297,7 @@ export const Hero = ({ ready = true }: { ready?: boolean }) => {
                   delay: 0.3,
                   ease: easeOut,
                 }}
-                className="flex items-center gap-[3px] h-20 mb-4"
+                className="flex items-center gap-[3px] h-20 mb-4 overflow-hidden"
               >
                 {waveformBars}
               </motion.div>

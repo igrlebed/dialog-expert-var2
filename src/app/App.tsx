@@ -131,7 +131,7 @@ export default function App() {
         <CursorGlow />
         <ScrollProgress />
         <Header />
-        <main>
+        <main className="pt-[72px]">
           {/* Critical above-the-fold — loaded eagerly */}
           <Hero ready={preloaderDone} />
 

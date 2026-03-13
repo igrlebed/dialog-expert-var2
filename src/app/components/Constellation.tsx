@@ -35,7 +35,7 @@ export const Constellation = () => {
     let isVisible = true;
 
     const CONNECTION_DIST = 140;
-    const STAR_COUNT_FACTOR = window.innerWidth < 768 ? 0.00006 : 0.00012;
+    const STAR_COUNT_FACTOR = window.innerWidth < 768 ? 0 : 0.00008;
     const CELL_SIZE = CONNECTION_DIST;
 
     const rand = (min: number, max: number) => Math.random() * (max - min) + min;
@@ -57,6 +57,12 @@ export const Constellation = () => {
     });
 
     const resize = () => {
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        stars = [];
+        return;
+      }
+
       const rect = container.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = rect.width;
@@ -67,7 +73,7 @@ export const Constellation = () => {
       canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const count = Math.round(w * h * STAR_COUNT_FACTOR);
+      const count = Math.min(Math.round(w * h * STAR_COUNT_FACTOR), 40);
       if (stars.length === 0) {
         stars = Array.from({ length: count }, createStar);
       } else {
@@ -96,10 +102,10 @@ export const Constellation = () => {
     };
 
     let lastTime = performance.now();
-    const frameInterval = window.innerWidth < 768 ? 50 : 16; // 20fps for mobile, 60fps for desktop
+    const frameInterval = 33; // Lock all to 30fps
 
     const draw = (now: number) => {
-      if (!isVisible) {
+      if (!isVisible || stars.length === 0) {
         animationId = requestAnimationFrame(draw);
         return;
       }
