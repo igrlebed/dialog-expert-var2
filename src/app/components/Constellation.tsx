@@ -35,7 +35,7 @@ export const Constellation = () => {
     let isVisible = true;
 
     const CONNECTION_DIST = 140;
-    const STAR_COUNT_FACTOR = 0.00012;
+    const STAR_COUNT_FACTOR = window.innerWidth < 768 ? 0.00006 : 0.00012;
     const CELL_SIZE = CONNECTION_DIST;
 
     const rand = (min: number, max: number) => Math.random() * (max - min) + min;

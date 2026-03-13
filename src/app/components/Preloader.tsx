@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ease } from './motion-utils';
 
-const easeOut = ease.out as unknown as number[];
+const easeOut = ease.out as any;
 
 /**
  * Minimal preloader — single pulsing dot → smooth dissolve into Hero.
@@ -11,7 +11,7 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
   const [phase, setPhase] = useState<'loading' | 'fading' | 'done'>('loading');
 
   useEffect(() => {
-    const timer = setTimeout(() => setPhase('fading'), 800);
+    const timer = setTimeout(() => setPhase('fading'), 400);
     return () => clearTimeout(timer);
   }, []);
 
@@ -20,7 +20,7 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
     const timer = setTimeout(() => {
       setPhase('done');
       onComplete();
-    }, 500);
+    }, 300);
     return () => clearTimeout(timer);
   }, [phase, onComplete]);
 

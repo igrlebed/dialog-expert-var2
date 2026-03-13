@@ -39,6 +39,7 @@ export function SplitText({
         <span key={i} className="inline-block overflow-hidden leading-[1.15] align-bottom">
           <motion.span
             className={`inline-block ${wordClassName}`}
+            style={{ willChange: 'transform, opacity' }}
             initial={immediate
               ? { y: '100%', opacity: 1 }
               : { y: '110%', opacity: 0 }
@@ -52,7 +53,7 @@ export function SplitText({
             transition={{
               duration: immediate ? 0.8 : 1.0,
               delay: delay + i * staggerDelay,
-              ease: ease.dramatic as unknown as number[],
+              ease: ease.dramatic as any,
             }}
           >
             {word}
@@ -96,7 +97,7 @@ export function ClipReveal({
       transition={{
         duration,
         delay,
-        ease: ease.dramatic as unknown as number[],
+        ease: ease.dramatic as any,
         opacity: { duration: 0.4, delay },
       }}
     >
@@ -128,10 +129,10 @@ export function BlurReveal({
       whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
       viewport={{ once, margin: '-80px' }}
       transition={{
-        duration,
-        delay,
-        ease: ease.out as unknown as number[],
-      }}
+          duration,
+          delay,
+          ease: ease.out as any,
+        }}
     >
       {children}
     </motion.div>
@@ -190,9 +191,9 @@ export function StaggerItem({
           y: 0,
           scale: 1,
           transition: {
-            duration: 0.9,
-            ease: ease.out as unknown as number[],
-          },
+              duration: 0.9,
+              ease: ease.out as any,
+            },
         },
       }}
     >
@@ -335,7 +336,7 @@ export function ScaleReveal({
       transition={{
         duration: 1.2,
         delay,
-        ease: ease.out as unknown as number[],
+        ease: ease.out as any,
       }}
     >
       {children}

@@ -10,7 +10,7 @@ import {
 import { useSmoothScroll } from "./SmoothScroll";
 import { scrollToSection } from "./scroll-utils";
 
-const easeOut = ease.out as unknown as number[];
+const easeOut = ease.out as any;
 
 /* ── Waveform bar heights ── */
 const waveHeights = [
@@ -50,31 +50,24 @@ export const Hero = ({ ready = true }: { ready?: boolean }) => {
     scrollToSection(href, smoothScroll);
   };
 
-  const show = (values: Record<string, unknown>) =>
+  const show = (values: any) =>
     ready ? values : undefined;
 
   const waveformBars = useMemo(
     () =>
       waveHeights.map((h, i) => (
-        <motion.div
+        <div
           key={i}
-          className="rounded-sm"
+          className="rounded-sm animate-waveform"
           style={{
             width: 4,
             height: h,
             background:
               "linear-gradient(to top, #00A84F, #34D27B)",
             opacity: 0.3 + (h / 80) * 0.6,
-          }}
-          animate={{
-            scaleY: [0.4, 1, 0.4],
-            opacity: [0.4, 0.9, 0.4],
-          }}
-          transition={{
-            duration: 1.4,
-            delay: i * 0.06,
-            repeat: Infinity,
-            ease: "easeInOut",
+            animationDelay: `${i * 0.06}s`,
+            transformOrigin: "bottom",
+            willChange: "transform, opacity",
           }}
         />
       )),
@@ -317,16 +310,16 @@ export const Hero = ({ ready = true }: { ready?: boolean }) => {
                   delay: 0.5,
                   ease: easeOut,
                 }}
-                className="rounded-xl border border-red-500/30 bg-red-500/[0.06] backdrop-blur-sm p-4"
+                className="rounded-xl border border-red-500/30 bg-red-900/20 backdrop-blur-sm p-4"
               >
-                <div className="text-[14px] uppercase tracking-[0.15em] text-red-400 mb-2">
+                <div className="text-[14px] uppercase tracking-[0.15em] text-red-300 font-semibold mb-2">
                   &#9888; Потеря сделки — ювелирный
                 </div>
-                <div className="text-[14px] text-white/70 italic leading-relaxed">
+                <div className="text-[14px] text-white/80 italic leading-relaxed">
                   &laquo;Ну ладно, я подумаю...&raquo; —
                   &laquo;Хорошо, заходите!&raquo;
                 </div>
-                <div className="flex items-center gap-2 mt-3 text-[14px] text-white/55">
+                <div className="flex items-center gap-2 mt-3 text-[14px] text-white/60">
                   <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
                   Продавец не отработал возражение. Клиент ушёл.
                 </div>
@@ -341,18 +334,18 @@ export const Hero = ({ ready = true }: { ready?: boolean }) => {
                   delay: 0.65,
                   ease: easeOut,
                 }}
-                className="rounded-xl border border-green-500/30 bg-green-500/[0.04] backdrop-blur-sm p-4"
+                className="rounded-xl border border-green-500/30 bg-green-900/20 backdrop-blur-sm p-4"
               >
-                <div className="text-[14px] uppercase tracking-[0.15em] text-[#34D27B] mb-2">
+                <div className="text-[14px] uppercase tracking-[0.15em] text-[#4ADE80] font-semibold mb-2">
                   &#10003; Эталонный диалог — HoReCa
                 </div>
-                <div className="text-[14px] text-white/70 italic leading-relaxed">
+                <div className="text-[14px] text-white/80 italic leading-relaxed">
                   &laquo;Могу предложить к этому бокалу сырную
                   тарелку...&raquo;
                 </div>
-                <div className="flex items-center gap-2 mt-3 text-[14px] text-white/55">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#34D27B] shrink-0" />
-                  Доппродажа выполнена. Средний чек +480 &#8381;
+                <div className="flex items-center gap-2 mt-3 text-[14px] text-white/60">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
+                  Upsell-предложение сделано вовремя. Чек +450₽.
                 </div>
               </motion.div>
 
