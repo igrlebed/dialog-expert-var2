@@ -287,100 +287,108 @@ export const Hero = ({ ready = true }: { ready?: boolean }) => {
               }}
             />
 
-            <div className="relative z-10 w-full max-w-md space-y-4 py-8">
+            <div className="relative z-10 w-full max-w-md space-y-4 py-8 min-h-[440px]">
               {/* Waveform */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={show({ opacity: 1, scale: 1 })}
-                transition={{
-                  duration: 1.0,
-                  delay: 0.3,
-                  ease: easeOut,
-                }}
-                className="flex items-center gap-[3px] h-20 mb-4 overflow-hidden"
-              >
-                {waveformBars}
-              </motion.div>
+              <div className="h-20 mb-4 overflow-hidden">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={show({ opacity: 1, scale: 1 })}
+                  transition={{
+                    duration: 1.0,
+                    delay: 0.3,
+                    ease: easeOut,
+                  }}
+                  className="flex items-center gap-[3px] h-full"
+                >
+                  {waveformBars}
+                </motion.div>
+              </div>
 
               {/* Dialog card: flagged */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={show({ opacity: 1, y: 0 })}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.5,
-                  ease: easeOut,
-                }}
-                className="rounded-xl border border-red-500/30 bg-red-900/20 backdrop-blur-sm p-4"
-              >
-                <div className="text-[14px] uppercase tracking-[0.15em] text-red-300 font-semibold mb-2">
-                  &#9888; Потеря сделки — ювелирный
-                </div>
-                <div className="text-[14px] text-white/80 italic leading-relaxed">
-                  &laquo;Ну ладно, я подумаю...&raquo; —
-                  &laquo;Хорошо, заходите!&raquo;
-                </div>
-                <div className="flex items-center gap-2 mt-3 text-[14px] text-white/60">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
-                  Продавец не отработал возражение. Клиент ушёл.
-                </div>
-              </motion.div>
+              <div className="min-h-[110px]">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={show({ opacity: 1, y: 0 })}
+                  transition={{
+                    duration: 0.8,
+                    delay: 0.5,
+                    ease: easeOut,
+                  }}
+                  className="rounded-xl border border-red-500/30 bg-red-900/20 backdrop-blur-sm p-4 h-full"
+                >
+                  <div className="text-[14px] uppercase tracking-[0.15em] text-red-300 font-semibold mb-2">
+                    &#9888; Потеря сделки — ювелирный
+                  </div>
+                  <div className="text-[14px] text-white/80 italic leading-relaxed">
+                    &laquo;Ну ладно, я подумаю...&raquo; —
+                    &laquo;Хорошо, заходите!&raquo;
+                  </div>
+                  <div className="flex items-center gap-2 mt-3 text-[14px] text-white/60">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
+                    Продавец не отрабовал возражение. Клиент ушёл.
+                  </div>
+                </motion.div>
+              </div>
 
               {/* Dialog card: ok */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={show({ opacity: 1, y: 0 })}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.65,
-                  ease: easeOut,
-                }}
-                className="rounded-xl border border-green-500/30 bg-green-900/20 backdrop-blur-sm p-4"
-              >
-                <div className="text-[14px] uppercase tracking-[0.15em] text-[#4ADE80] font-semibold mb-2">
-                  &#10003; Эталонный диалог — HoReCa
-                </div>
-                <div className="text-[14px] text-white/80 italic leading-relaxed">
-                  &laquo;Могу предложить к этому бокалу сырную
-                  тарелку...&raquo;
-                </div>
-                <div className="flex items-center gap-2 mt-3 text-[14px] text-white/60">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
-                  Upsell-предложение сделано вовремя. Чек +450₽.
-                </div>
-              </motion.div>
+              <div className="min-h-[110px]">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={show({ opacity: 1, y: 0 })}
+                  transition={{
+                    duration: 0.8,
+                    delay: 0.65,
+                    ease: easeOut,
+                  }}
+                  className="rounded-xl border border-green-500/30 bg-green-900/20 backdrop-blur-sm p-4 h-full"
+                >
+                  <div className="text-[14px] uppercase tracking-[0.15em] text-[#4ADE80] font-semibold mb-2">
+                    &#10003; Эталонный диалог — HoReCa
+                  </div>
+                  <div className="text-[14px] text-white/80 italic leading-relaxed">
+                    &laquo;Могу предложить к этому бокалу сырную
+                    тарелку...&raquo;
+                  </div>
+                  <div className="flex items-center gap-2 mt-3 text-[14px] text-white/60">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
+                    Upsell-предложение сделано вовремя. Чек +450₽.
+                  </div>
+                </motion.div>
+              </div>
 
               {/* Dialog card: summary */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={show({ opacity: 1, y: 0 })}
-                transition={{
-                  duration: 0.8,
-                  delay: 0.8,
-                  ease: easeOut,
-                }}
-                className="rounded-xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm p-4"
-              >
-                <div className="text-[14px] uppercase tracking-[0.15em] text-[#00A84F] mb-2">
-                  &#128202; Итог за сегодня — 3 точки
-                </div>
-                <div className="text-[14px] text-white/60 whitespace-nowrap">
-                  <span className="text-white/90 font-semibold">
-                    47
-                  </span>{" "}
-                  диалогов
-                  <span className="text-white/45 mx-1">·</span>
-                  Критических:{" "}
-                  <span className="text-red-400 font-semibold">
-                    8
-                  </span>
-                  <span className="text-white/45 mx-1">·</span>
-                  Эталонных:{" "}
-                  <span className="text-[#34D27B] font-semibold">
-                    14
-                  </span>
-                </div>
-              </motion.div>
+              <div className="min-h-[90px]">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={show({ opacity: 1, y: 0 })}
+                  transition={{
+                    duration: 0.8,
+                    delay: 0.8,
+                    ease: easeOut,
+                  }}
+                  className="rounded-xl border border-white/[0.08] bg-white/[0.03] backdrop-blur-sm p-4 h-full"
+                >
+                  <div className="text-[14px] uppercase tracking-[0.15em] text-[#00A84F] mb-2">
+                    &#128202; Итог за сегодня — 3 точки
+                  </div>
+                  <div className="text-[14px] text-white/60 whitespace-nowrap">
+                    <span className="text-white/90 font-semibold">
+                      47
+                    </span>{" "}
+                    диалогов
+                    <span className="text-white/45 mx-1">·</span>
+                    Критических:{" "}
+                    <span className="text-red-400 font-semibold">
+                      8
+                    </span>
+                    <span className="text-white/45 mx-1">·</span>
+                    Эталонных:{" "}
+                    <span className="text-[#34D27B] font-semibold">
+                      14
+                    </span>
+                  </div>
+                </motion.div>
+              </div>
             </div>
           </motion.div>
         </div>

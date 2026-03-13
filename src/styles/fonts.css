@@ -1,16 +1,6 @@
 /*
  * Font loading strategy:
- * - Google Fonts with display=swap: text renders immediately in fallback font,
- *   swaps to Onest when loaded. No FOIT (Flash of Invisible Text).
- * - Only 2 weights (400, 500) — minimal font file downloads.
- *
- * INFRA NOTE: For production, add these to the HTML <head> for faster font discovery:
- *   <link rel="preconnect" href="https://fonts.googleapis.com" />
- *   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
- *
- * These cannot be set from CSS — they require HTML/server-side changes.
- * Without preconnect, the font loading chain is:
- *   CSS file → @import → fonts.googleapis.com → font CSS → fonts.gstatic.com → font files
- * With preconnect, the DNS+TLS for both origins starts in parallel with CSS parsing.
+ * - Google Fonts with display=swap is handled via index.html for performance.
+ * - This file is kept for local development/fallback.
  */
 @import url('https://fonts.googleapis.com/css2?family=Onest:wght@400;500&display=swap');
