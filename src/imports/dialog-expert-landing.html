@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ДиалогЭксперт — Речевая аналитика для розницы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0D0D0D;
+    --cream: #F7F4EF;
+    --gold: #C8973A;
+    --gold-light: #E8C97A;
+    --muted: #6B6560;
+    --border: rgba(200,151,58,0.2);
+    --white: #FFFFFF;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ─── UTILITY ─── */
+  .serif { font-family: 'Cormorant Garamond', serif; }
+  .gold  { color: var(--gold); }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 60px;
+    background: rgba(247,244,239,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 700; letter-spacing: 0.04em;
+  }
+  .logo span { color: var(--gold); }
+  nav a {
+    font-size: 13px; font-weight: 500; color: var(--muted);
+    text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase;
+    transition: color .2s;
+  }
+  nav a:hover { color: var(--ink); }
+  .nav-links { display: flex; gap: 36px; }
+  .nav-cta {
+    background: var(--ink); color: var(--cream) !important;
+    padding: 10px 24px; border-radius: 2px;
+    font-size: 12px !important; letter-spacing: 0.1em !important;
+    transition: background .2s !important;
+  }
+  .nav-cta:hover { background: var(--gold) !important; color: var(--white) !important; }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    padding-top: 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero-left {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 60px 80px 60px;
+  }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 28px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 32px; height: 1px; background: var(--gold);
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 5vw, 68px);
+    font-weight: 600; line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+  }
+  h1 em { font-style: italic; color: var(--gold); }
+  .hero-sub {
+    font-size: 16px; line-height: 1.7; color: var(--muted);
+    max-width: 440px; margin-bottom: 48px;
+    font-weight: 300;
+  }
+  .hero-sub strong { color: var(--ink); font-weight: 500; }
+  .cta-group { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--ink); color: var(--cream);
+    padding: 16px 36px; border: none; cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; border-radius: 2px;
+    text-decoration: none; display: inline-block;
+    transition: background .25s, transform .2s;
+  }
+  .btn-primary:hover { background: var(--gold); transform: translateY(-2px); }
+  .btn-ghost {
+    color: var(--ink); font-size: 13px; font-weight: 500;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    letter-spacing: 0.04em; border-bottom: 1px solid transparent;
+    transition: border-color .2s, color .2s;
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-ghost svg { transition: transform .2s; }
+  .btn-ghost:hover svg { transform: translateX(4px); }
+
+  .hero-stats {
+    display: flex; gap: 40px; margin-top: 60px;
+    padding-top: 40px; border-top: 1px solid var(--border);
+  }
+  .stat-item {}
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px; font-weight: 700; color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 12px; color: var(--muted); margin-top: 4px;
+    line-height: 1.4; max-width: 100px;
+  }
+
+  .hero-right {
+    position: relative;
+    background: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .hero-visual {
+    position: relative; z-index: 2;
+    padding: 60px 50px;
+    width: 100%;
+  }
+  .waveform-container {
+    margin-bottom: 32px;
+    height: 80px; position: relative;
+    display: flex; align-items: center; gap: 3px;
+  }
+  .waveform-bar {
+    width: 4px; border-radius: 2px;
+    background: var(--gold);
+    opacity: 0.7;
+    animation: wave 1.4s ease-in-out infinite;
+  }
+  @keyframes wave {
+    0%, 100% { transform: scaleY(0.4); opacity: 0.4; }
+    50% { transform: scaleY(1); opacity: 0.9; }
+  }
+  .dialog-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(200,151,58,0.3);
+    border-radius: 8px; padding: 20px 24px;
+    margin-bottom: 12px;
+    backdrop-filter: blur(4px);
+  }
+  .dialog-card.flagged {
+    border-color: rgba(220,80,60,0.5);
+    background: rgba(220,80,60,0.08);
+  }
+  .dialog-card.ok {
+    border-color: rgba(80,180,100,0.4);
+    background: rgba(80,180,100,0.06);
+  }
+  .dialog-label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--gold); font-weight: 600; margin-bottom: 8px;
+  }
+  .dialog-label.red { color: #E05040; }
+  .dialog-label.green { color: #50B464; }
+  .dialog-text {
+    font-size: 14px; color: rgba(255,255,255,0.75);
+    line-height: 1.5; font-style: italic;
+  }
+  .dialog-insight {
+    font-size: 12px; color: rgba(255,255,255,0.45);
+    margin-top: 8px; display: flex; align-items: center; gap: 6px;
+  }
+  .insight-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #E05040; flex-shrink: 0;
+  }
+  .insight-dot.green { background: #50B464; }
+  .hero-bg-grid {
+    position: absolute; inset: 0; z-index: 1;
+    background-image:
+      linear-gradient(rgba(200,151,58,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,151,58,0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .hero-glow {
+    position: absolute; top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(200,151,58,0.15) 0%, transparent 70%);
+    z-index: 1;
+  }
+
+  /* ─── PAIN SECTION ─── */
+  #pain {
+    background: var(--ink);
+    padding: 120px 60px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  #pain::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -45deg, transparent, transparent 60px,
+      rgba(200,151,58,0.03) 60px, rgba(200,151,58,0.03) 61px
+    );
+  }
+  .section-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 20px;
+    display: inline-flex; align-items: center; gap: 12px;
+  }
+  .section-eyebrow::before, .section-eyebrow::after {
+    content: ''; width: 24px; height: 1px; background: var(--gold);
+  }
+  #pain h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(34px, 4vw, 56px);
+    font-weight: 600; color: var(--cream);
+    line-height: 1.12; margin-bottom: 24px;
+    position: relative;
+  }
+  #pain h2 em { color: var(--gold); font-style: italic; }
+  .pain-sub {
+    font-size: 17px; color: rgba(247,244,239,0.55);
+    max-width: 560px; margin: 0 auto 80px;
+    line-height: 1.7; font-weight: 300;
+  }
+  .pain-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; max-width: 960px; margin: 0 auto;
+    position: relative;
+  }
+  .pain-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(200,151,58,0.12);
+    padding: 40px 32px;
+    text-align: left;
+    transition: background .3s, border-color .3s;
+  }
+  .pain-item:hover {
+    background: rgba(200,151,58,0.06);
+    border-color: rgba(200,151,58,0.3);
+  }
+  .pain-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px; font-weight: 700;
+    color: rgba(200,151,58,0.2); line-height: 1;
+    margin-bottom: 16px;
+  }
+  .pain-title {
+    font-size: 15px; font-weight: 600; color: var(--cream);
+    margin-bottom: 10px; line-height: 1.4;
+  }
+  .pain-desc {
+    font-size: 14px; color: rgba(247,244,239,0.45);
+    line-height: 1.6; font-weight: 300;
+  }
+
+  /* ─── HOW IT WORKS ─── */
+  #how {
+    padding: 120px 60px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .section-header { text-align: center; margin-bottom: 80px; }
+  .section-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 3.5vw, 52px);
+    font-weight: 600; line-height: 1.15;
+    margin-top: 16px;
+  }
+  .section-header h2 em { color: var(--gold); font-style: italic; }
+  .steps {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; position: relative;
+  }
+  .steps::before {
+    content: '';
+    position: absolute; top: 32px; left: 12.5%; right: 12.5%;
+    height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .step {
+    padding: 0 24px; text-align: center;
+    position: relative;
+  }
+  .step-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 28px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 700; color: var(--gold);
+    position: relative; z-index: 1;
+    transition: background .3s, border-color .3s;
+  }
+  .step:hover .step-icon {
+    background: var(--gold); color: var(--white);
+    border-color: var(--gold);
+  }
+  .step h3 {
+    font-size: 15px; font-weight: 600; margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .step p {
+    font-size: 13px; color: var(--muted); line-height: 1.6; font-weight: 300;
+  }
+
+  /* ─── INDUSTRIES ─── */
+  #industries {
+    background: var(--ink);
+    padding: 120px 60px;
+  }
+  #industries .section-header h2 { color: var(--cream); }
+  .industries-grid {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: 2px; max-width: 1200px; margin: 0 auto;
+  }
+  .industry-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(200,151,58,0.15);
+    padding: 36px 24px;
+    text-align: center; cursor: default;
+    transition: background .3s, border-color .3s, transform .3s;
+  }
+  .industry-card:hover {
+    background: rgba(200,151,58,0.1);
+    border-color: rgba(200,151,58,0.4);
+    transform: translateY(-4px);
+  }
+  .industry-icon { font-size: 32px; margin-bottom: 16px; }
+  .industry-name {
+    font-size: 13px; font-weight: 600; color: var(--cream);
+    letter-spacing: 0.04em; margin-bottom: 8px;
+  }
+  .industry-metric {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 700; color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .industry-result {
+    font-size: 11px; color: rgba(247,244,239,0.4);
+    line-height: 1.4;
+  }
+
+  /* ─── FEATURES ─── */
+  #features {
+    padding: 120px 60px;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .features-layout {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .features-left h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 3vw, 48px);
+    font-weight: 600; line-height: 1.15; margin-bottom: 16px;
+  }
+  .features-left h2 em { color: var(--gold); font-style: italic; }
+  .features-left p {
+    font-size: 15px; color: var(--muted); line-height: 1.7;
+    font-weight: 300; margin-bottom: 40px;
+  }
+  .feature-list { display: flex; flex-direction: column; gap: 20px; }
+  .feature-item {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 20px; border: 1px solid var(--border);
+    border-radius: 4px; transition: border-color .3s, background .3s;
+  }
+  .feature-item:hover {
+    border-color: var(--gold); background: rgba(200,151,58,0.04);
+  }
+  .feature-check {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--gold); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .feature-check svg { color: white; }
+  .feature-text h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .feature-text p { font-size: 13px; color: var(--muted); line-height: 1.5; font-weight: 300; }
+
+  .dashboard-mock {
+    background: var(--ink);
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid rgba(200,151,58,0.2);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+  }
+  .dash-header {
+    padding: 14px 20px;
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(200,151,58,0.15);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .dash-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dash-title {
+    font-size: 12px; color: rgba(247,244,239,0.5);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-left: 8px;
+  }
+  .dash-body { padding: 24px; }
+  .dash-metric-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    margin-bottom: 20px;
+  }
+  .dash-metric {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(200,151,58,0.15);
+    border-radius: 6px; padding: 14px;
+  }
+  .dash-metric-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 700; color: var(--gold);
+  }
+  .dash-metric-lbl { font-size: 10px; color: rgba(247,244,239,0.4); margin-top: 2px; }
+  .dash-bar-section { margin-bottom: 16px; }
+  .dash-bar-label {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: rgba(247,244,239,0.5);
+    margin-bottom: 6px;
+  }
+  .dash-bar-bg {
+    height: 6px; background: rgba(255,255,255,0.07);
+    border-radius: 3px; overflow: hidden;
+  }
+  .dash-bar-fill {
+    height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    transition: width 1.5s ease;
+  }
+  .dash-alert {
+    background: rgba(220,80,60,0.1);
+    border: 1px solid rgba(220,80,60,0.3);
+    border-radius: 6px; padding: 12px 14px;
+    font-size: 12px; color: rgba(247,244,239,0.7);
+    display: flex; gap: 10px; align-items: center;
+    margin-top: 16px;
+  }
+  .alert-icon { font-size: 14px; }
+
+  /* ─── SOCIAL PROOF ─── */
+  #proof {
+    background: var(--cream);
+    padding: 100px 60px;
+    border-top: 1px solid var(--border);
+  }
+  .proof-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 32px; max-width: 1100px; margin: 0 auto;
+  }
+  .testimonial {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px; padding: 36px;
+    position: relative;
+    transition: transform .3s, box-shadow .3s;
+  }
+  .testimonial:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  }
+  .quote-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 80px; font-weight: 700; color: var(--gold);
+    line-height: 0.5; margin-bottom: 20px; display: block; opacity: 0.4;
+  }
+  .testimonial-text {
+    font-size: 15px; line-height: 1.7; color: var(--ink);
+    margin-bottom: 24px; font-weight: 300;
+  }
+  .testimonial-text strong { font-weight: 600; color: var(--gold); }
+  .testimonial-author {
+    display: flex; align-items: center; gap: 14px;
+    border-top: 1px solid var(--border); padding-top: 20px;
+  }
+  .author-avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: var(--ink); display: flex; align-items: center;
+    justify-content: center; font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; color: var(--gold); font-weight: 700;
+    flex-shrink: 0;
+  }
+  .author-name { font-size: 14px; font-weight: 600; }
+  .author-role { font-size: 12px; color: var(--muted); }
+
+  /* ─── CTA SECTION ─── */
+  #cta {
+    background: var(--ink);
+    padding: 140px 60px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  #cta::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(200,151,58,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-badge {
+    display: inline-block;
+    background: rgba(200,151,58,0.15);
+    border: 1px solid rgba(200,151,58,0.4);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 32px;
+  }
+  #cta h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(38px, 5vw, 64px);
+    font-weight: 600; color: var(--cream);
+    line-height: 1.1; margin-bottom: 20px;
+    position: relative;
+  }
+  #cta h2 em { color: var(--gold); font-style: italic; }
+  #cta p {
+    font-size: 17px; color: rgba(247,244,239,0.5);
+    max-width: 500px; margin: 0 auto 48px;
+    line-height: 1.7; font-weight: 300;
+  }
+  .cta-form {
+    display: flex; gap: 12px; justify-content: center;
+    flex-wrap: wrap; position: relative; z-index: 1;
+  }
+  .cta-input {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(200,151,58,0.3);
+    border-radius: 2px; padding: 16px 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px; color: var(--cream);
+    width: 260px; outline: none;
+    transition: border-color .2s;
+  }
+  .cta-input::placeholder { color: rgba(247,244,239,0.3); }
+  .cta-input:focus { border-color: var(--gold); }
+  .btn-cta {
+    background: var(--gold); color: var(--white);
+    padding: 16px 40px; border: none; cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; border-radius: 2px;
+    transition: background .25s, transform .2s;
+    white-space: nowrap;
+  }
+  .btn-cta:hover { background: #D4A845; transform: translateY(-2px); }
+  .cta-footnote {
+    font-size: 12px; color: rgba(247,244,239,0.3);
+    margin-top: 20px; position: relative; z-index: 1;
+  }
+  .guarantee-strip {
+    display: flex; gap: 40px; justify-content: center;
+    margin-top: 64px; flex-wrap: wrap; position: relative; z-index: 1;
+  }
+  .guarantee-item {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: rgba(247,244,239,0.5);
+  }
+  .guarantee-item svg { color: var(--gold); flex-shrink: 0; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: #080808;
+    padding: 40px 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid rgba(200,151,58,0.1);
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 700; color: var(--cream);
+  }
+  .footer-logo span { color: var(--gold); }
+  footer p { font-size: 12px; color: rgba(247,244,239,0.25); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp .7s ease forwards; }
+  .delay-1 { animation-delay: .15s; opacity: 0; }
+  .delay-2 { animation-delay: .3s; opacity: 0; }
+  .delay-3 { animation-delay: .45s; opacity: 0; }
+  .delay-4 { animation-delay: .6s; opacity: 0; }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    #hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 100px 24px 60px; }
+    .hero-right { min-height: 400px; }
+    .hero-stats { gap: 24px; flex-wrap: wrap; }
+    #pain, #industries, #cta { padding: 80px 24px; }
+    #how, #features, #proof { padding: 80px 24px; }
+    .pain-grid, .industries-grid { grid-template-columns: 1fr; gap: 2px; }
+    .steps { grid-template-columns: 1fr 1fr; gap: 40px; }
+    .steps::before { display: none; }
+    .features-layout { grid-template-columns: 1fr; gap: 48px; }
+    .proof-grid { grid-template-columns: 1fr; }
+    .cta-form { flex-direction: column; align-items: center; }
+    .cta-input { width: 100%; max-width: 340px; }
+    footer { flex-direction: column; gap: 12px; text-align: center; padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Диалог<span>Эксперт</span></div>
+  <div class="nav-links">
+    <a href="#how">Как работает</a>
+    <a href="#industries">Отрасли</a>
+    <a href="#proof">Кейсы</a>
+    <a href="#cta" class="nav-cta">Получить демо</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-eyebrow fade-up">Речевая аналитика офлайн-диалогов</div>
+    <h1 class="fade-up delay-1">
+      Вы теряете сделки.<br>
+      Но не знаете,<br>
+      <em>где именно.</em>
+    </h1>
+    <p class="hero-sub fade-up delay-2">
+      ДиалогЭксперт записывает, расшифровывает и анализирует каждый диалог
+      ваших продавцов — <strong>без камер и без вмешательства</strong>.
+      Вы видите, где теряются деньги.
+    </p>
+    <div class="cta-group fade-up delay-3">
+      <a href="#cta" class="btn-primary">Получить бесплатное демо</a>
+      <a href="#how" class="btn-ghost">
+        Как это работает
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 8h10M9 4l4 4-4 4"/>
+        </svg>
+      </a>
+    </div>
+    <div class="hero-stats fade-up delay-4">
+      <div class="stat-item">
+        <div class="stat-num">+34%</div>
+        <div class="stat-label">рост конверсии в первые 90 дней</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2 дня</div>
+        <div class="stat-label">до первых инсайтов по вашей точке</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">диалогов — ни одна потеря не останется незамеченной</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-visual">
+      <div class="waveform-container" id="waveform"></div>
+
+      <div class="dialog-card flagged">
+        <div class="dialog-label red">⚠ Потеря сделки — ювелирный</div>
+        <div class="dialog-text">«Ну ладно, я подумаю…» — «Хорошо, заходите!»</div>
+        <div class="dialog-insight">
+          <div class="insight-dot"></div>
+          Продавец не отработал возражение. Клиент ушёл.
+        </div>
+      </div>
+
+      <div class="dialog-card ok">
+        <div class="dialog-label green">✓ Эталонный диалог — HoReCa</div>
+        <div class="dialog-text">«Могу предложить к этому бокалу сырную тарелку…»</div>
+        <div class="dialog-insight">
+          <div class="insight-dot green"></div>
+          Upsell выполнен. Средний чек +480 ₽
+        </div>
+      </div>
+
+      <div class="dialog-card">
+        <div class="dialog-label">📊 Итог за сегодня — 3 точки</div>
+        <div class="dialog-text" style="color: rgba(255,255,255,0.5); font-style: normal; font-size: 13px;">
+          Проанализировано: <strong style="color:var(--gold-light)">47 диалогов</strong> &nbsp;·&nbsp;
+          Критических: <strong style="color:#E05040">8</strong> &nbsp;·&nbsp;
+          Эталонных: <strong style="color:#50B464">14</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section id="pain">
+  <div style="position:relative; z-index:1;">
+    <div style="text-align:center; margin-bottom: 70px;">
+      <div class="section-eyebrow" style="color: var(--gold);">Реальность вашего бизнеса</div>
+      <h2>Вы управляете тем,<br><em>чего не видите</em></h2>
+      <p class="pain-sub">
+        Тайные покупатели — раз в месяц. Прослушка колл-центра — только для телефона.
+        А живые диалоги с клиентами у вас на кассе? Они исчезают навсегда.
+      </p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-item">
+        <div class="pain-number">01</div>
+        <div class="pain-title">Тренинги не работают</div>
+        <div class="pain-desc">Вы платите за обучение, но не знаете — применяет ли продавец скрипт. Через неделю всё возвращается на круги своя.</div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-number">02</div>
+        <div class="pain-title">Цифры есть, причин нет</div>
+        <div class="pain-desc">Конверсия упала на 12%. Почему? Новый сотрудник? Другой скрипт? Сезон? Вы гадаете вместо того, чтобы знать.</div>
+      </div>
+      <div class="pain-item">
+        <div class="pain-number">03</div>
+        <div class="pain-title">Масштаб невозможен</div>
+        <div class="pain-desc">Одну точку вы ещё контролируете лично. Три точки — уже нет. Как обеспечить единый стандарт на всей сети?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-header">
+    <div class="section-eyebrow">Принцип работы</div>
+    <h2>От диалога — к <em>конкретному действию</em></h2>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-icon">01</div>
+      <h3>Устанавливаем устройство</h3>
+      <p>Компактный микрофон на точке. Никаких камер. Никакого вмешательства в работу персонала.</p>
+    </div>
+    <div class="step">
+      <div class="step-icon">02</div>
+      <h3>Записываем 100% диалогов</h3>
+      <p>Все разговоры с клиентами — расшифрованы, размечены по времени и сотруднику.</p>
+    </div>
+    <div class="step">
+      <div class="step-icon">03</div>
+      <h3>ИИ-анализ по вашему стандарту</h3>
+      <p>Система оценивает каждый диалог по вашим скриптам: приветствие, выявление потребности, upsell, закрытие.</p>
+    </div>
+    <div class="step">
+      <div class="step-icon">04</div>
+      <h3>Вы получаете отчёт с действиями</h3>
+      <p>Не «статистику» — а конкретно: какого сотрудника разобрать, по какому кейсу, сегодня.</p>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section id="industries">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="section-header">
+      <div class="section-eyebrow" style="color: var(--gold);">Отраслевые результаты</div>
+      <h2 style="color: var(--cream);">Работает там, где идут <em>живые продажи</em></h2>
+    </div>
+    <div class="industries-grid">
+      <div class="industry-card">
+        <div class="industry-icon">💎</div>
+        <div class="industry-name">Ювелирные сети</div>
+        <div class="industry-metric">+28%</div>
+        <div class="industry-result">конверсия примерки в покупку</div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-icon">🍽️</div>
+        <div class="industry-name">HoReCa</div>
+        <div class="industry-metric">+41%</div>
+        <div class="industry-result">средний чек через upsell</div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-icon">💊</div>
+        <div class="industry-name">Аптеки</div>
+        <div class="industry-metric">×2.3</div>
+        <div class="industry-result">допродажи сопутствующих товаров</div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-icon">🍔</div>
+        <div class="industry-name">Фуд-корт</div>
+        <div class="industry-metric">+15%</div>
+        <div class="industry-result">средний чек за первый месяц — допродажи картошки, напитка, соуса</div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-icon">🛒</div>
+        <div class="industry-name">Кассы / ритейл</div>
+        <div class="industry-metric">94%</div>
+        <div class="industry-result">соблюдение стандарта приветствия</div>
+      </div>
+      <div class="industry-card">
+        <div class="industry-icon">🚗</div>
+        <div class="industry-name">Автосалон</div>
+        <div class="industry-metric">+23%</div>
+        <div class="industry-result">конверсия тест-драйва в покупку</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="features-layout">
+    <div class="features-left">
+      <div class="section-eyebrow">Возможности системы</div>
+      <h2>Всё, что нужно<br>собственнику <em>для старта</em></h2>
+      <p>2 точки для пилота · Стабильный интернет · Без ИТ-отдела.</p>
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-check">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg>
+          </div>
+          <div class="feature-text">
+            <h4>Рейтинг сотрудников в реальном времени</h4>
+            <p>Видите кто из продавцов теряет клиентов — до того, как закрылась смена.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-check">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg>
+          </div>
+          <div class="feature-text">
+            <h4>Автоматические алерты на критические диалоги</h4>
+            <p>Грубость, игнорирование клиента, нарушение скрипта — уведомление сразу.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-check">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg>
+          </div>
+          <div class="feature-text">
+            <h4>Сравнение точек и смен</h4>
+            <p>Почему одна точка продаёт лучше другой? Теперь вы знаете точно.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-check">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg>
+          </div>
+          <div class="feature-text">
+            <h4>Готовые материалы для разборов</h4>
+            <p>Реальные фрагменты диалогов для обучения — лучшие и худшие примеры недели.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-mock">
+      <div class="dash-header">
+        <div class="dash-dot" style="background:#FF5F56"></div>
+        <div class="dash-dot" style="background:#FFBD2E"></div>
+        <div class="dash-dot" style="background:#27C93F"></div>
+        <div class="dash-title">Дашборд — ювелирный салон «Золотой Век»</div>
+      </div>
+      <div class="dash-body">
+        <div class="dash-metric-row">
+          <div class="dash-metric">
+            <div class="dash-metric-val">67%</div>
+            <div class="dash-metric-lbl">Конверсия сегодня</div>
+          </div>
+          <div class="dash-metric">
+            <div class="dash-metric-val" style="color:#50B464">↑12%</div>
+            <div class="dash-metric-lbl">vs прошлая неделя</div>
+          </div>
+          <div class="dash-metric">
+            <div class="dash-metric-val">23</div>
+            <div class="dash-metric-lbl">Диалогов сегодня</div>
+          </div>
+        </div>
+
+        <div class="dash-bar-section">
+          <div class="dash-bar-label"><span>Анна К. — соблюдение скрипта</span><span style="color:var(--gold)">91%</span></div>
+          <div class="dash-bar-bg"><div class="dash-bar-fill" style="width:91%"></div></div>
+        </div>
+        <div class="dash-bar-section">
+          <div class="dash-bar-label"><span>Дмитрий В.</span><span style="color:#E8C97A">74%</span></div>
+          <div class="dash-bar-bg"><div class="dash-bar-fill" style="width:74%; background: linear-gradient(90deg, #E8C97A, #C8973A)"></div></div>
+        </div>
+        <div class="dash-bar-section">
+          <div class="dash-bar-label"><span>Ирина М.</span><span style="color:#E05040">48%</span></div>
+          <div class="dash-bar-bg"><div class="dash-bar-fill" style="width:48%; background: linear-gradient(90deg, #E05040, #C04030)"></div></div>
+        </div>
+
+        <div class="dash-alert">
+          <span class="alert-icon">⚠️</span>
+          <span>Ирина М., 14:32 — клиент спросил о гравировке, продавец не предложил. Потенциальный upsell пропущен.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section id="proof">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="section-header" style="margin-bottom: 56px;">
+      <div class="section-eyebrow">Клиенты о результатах</div>
+      <h2>Не теория — <em>реальные цифры</em></h2>
+    </div>
+    <div class="proof-grid">
+      <div class="testimonial">
+        <span class="quote-mark">"</span>
+        <p class="testimonial-text">
+          Думал, что знаю своих кассиров. Оказалось, большинство вообще не предлагали дополнительные роллы к заказу.
+          После первого месяца работы с системой <strong>средний чек вырос на 22%</strong> — просто потому что
+          я наконец увидел, где именно теряются деньги.
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar">С</div>
+          <div>
+            <div class="author-name">Точка продаж суши</div>
+            <div class="author-role">Собственник, 1 точка · реальный клиент</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial" style="background: var(--cream);">
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom: 24px;">
+          <div style="font-size: 40px; line-height:1;">📊</div>
+          <div>
+            <div style="font-family:'Cormorant Garamond',serif; font-size:42px; font-weight:700; color:var(--gold); line-height:1;">90%</div>
+            <div style="font-size:13px; color:var(--muted); margin-top:4px;">соблюдение скрипта продаж</div>
+          </div>
+        </div>
+        <p class="testimonial-text" style="font-size:14px;">
+          Та же точка — через 6 недель после внедрения. До этого собственник не знал, выполняют ли сотрудники стандарт вообще.
+        </p>
+        <div style="border-top: 1px solid var(--border); padding-top: 16px; margin-top: 16px;">
+          <div style="font-size:12px; color:var(--muted);">Точка продаж суши · реальный результат</div>
+        </div>
+      </div>
+      <div class="testimonial" style="border: 1px dashed rgba(200,151,58,0.3); background: rgba(200,151,58,0.02);">
+        <span class="quote-mark" style="opacity:0.2;">"</span>
+        <p class="testimonial-text" style="color: var(--muted); font-style: italic;">
+          Здесь скоро появится ваш результат.<br><br>
+          Мы запускаем пилот на 2 точки бесплатно —
+          через 30 дней у вас будут свои цифры.
+        </p>
+        <div class="testimonial-author" style="border-top: 1px dashed rgba(200,151,58,0.3);">
+          <div class="author-avatar" style="background: rgba(200,151,58,0.15); color: var(--gold);">?</div>
+          <div>
+            <div class="author-name" style="color: var(--gold);">Ваш бизнес</div>
+            <div class="author-role">Станьте следующим кейсом</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-badge">Бесплатный пилот — 14 дней</div>
+  <h2>Узнайте, где вы<br>теряете деньги — <em>сегодня</em></h2>
+  <p>Подключим одну точку бесплатно. Через 48 часов покажем первый отчёт по вашим диалогам.</p>
+
+  <div class="cta-form">
+    <input class="cta-input" type="text" placeholder="Ваше имя">
+    <input class="cta-input" type="tel" placeholder="+7 (___) ___-__-__">
+    <button class="btn-cta">Хочу демо →</button>
+  </div>
+  <p class="cta-footnote">Без предоплаты · Без долгосрочного контракта · Настройка за 1 день</p>
+
+  <div class="guarantee-strip">
+    <div class="guarantee-item">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 1.9.7-4.1L2 5.4l4.2-.8z"/></svg>
+      Работает с 1 точки
+    </div>
+    <div class="guarantee-item">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="7"/><path d="M8 4v4l3 2"/></svg>
+      Результат за 48 часов
+    </div>
+    <div class="guarantee-item">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8l4 4 8-8"/></svg>
+      152 Клиента в России
+    </div>
+    <div class="guarantee-item">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M5 7h6M5 10h4"/></svg>
+      Соответствует 152-ФЗ
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Диалог<span>Эксперт</span></div>
+  <p>© 2025 ДиалогЭксперт. Речевая аналитика офлайн-диалогов.</p>
+</footer>
+
+<script>
+  // Waveform animation
+  const wf = document.getElementById('waveform');
+  const heights = [20, 35, 55, 70, 45, 60, 80, 50, 30, 65, 75, 40, 55, 70, 35, 60, 45, 80, 30, 55, 65, 40, 75, 50, 35, 60, 80, 45, 55, 30, 70, 60, 40, 75, 50, 35, 65, 80, 45, 30, 60, 55, 40, 70, 50, 35, 65, 45];
+  heights.forEach((h, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'waveform-bar';
+    bar.style.height = h + 'px';
+    bar.style.animationDelay = (i * 0.06) + 's';
+    bar.style.opacity = 0.3 + (h / 80) * 0.6;
+    wf.appendChild(bar);
+  });
+
+  // Intersection observer for fade-in
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.animation = 'fadeUp .7s ease forwards';
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.pain-item, .step, .industry-card, .testimonial, .feature-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity .6s ease, transform .6s ease';
+    obs.observe(el);
+  });
+
+  // Animate bars on scroll
+  const barObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.dash-bar-fill').forEach(bar => {
+          const w = bar.style.width;
+          bar.style.width = '0';
+          setTimeout(() => { bar.style.width = w; }, 200);
+        });
+        barObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  const mock = document.querySelector('.dashboard-mock');
+  if (mock) barObs.observe(mock);
+</script>
+</body>
+</html>
