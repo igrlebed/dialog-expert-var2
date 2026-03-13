@@ -58,10 +58,10 @@ export const Hero = ({ ready = true }: { ready?: boolean }) => {
       waveHeights.map((h, i) => (
         <div
           key={i}
-          className="rounded-sm animate-waveform"
+          className="rounded-sm animate-waveform shrink-0"
           style={{
             width: 4,
-            height: h,
+            height: `${h}px`,
             background:
               "linear-gradient(to top, #00A84F, #34D27B)",
             opacity: 0.3 + (h / 80) * 0.6,
@@ -296,7 +296,7 @@ export const Hero = ({ ready = true }: { ready?: boolean }) => {
                   delay: 0.3,
                   ease: easeOut,
                 }}
-                className="flex items-center gap-[3px] h-20 mb-4"
+                className="flex items-end gap-[3px] h-20 mb-4"
               >
                 {waveformBars}
               </motion.div>
